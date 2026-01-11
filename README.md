@@ -316,16 +316,24 @@ kubectl get namespaces
 ### Step 12.2: Create New Applicatio with ArgoCD
 
 Open the ArgoCD UI in your browser.
+
 Click + NEW APP.
+
 Fill in the following:
+
 Application Name: project
 Project Name: default
 Sync Policy: Automatic
+
 Repository URL: https://github.com/ophircloud/Hotstar-GitOps-project.git
 Revision: HEAD
+
 Path: kubernetes-files
+
 Cluster URL: https://kubernetes.default.svc
+
 Namespace: dev
+
 4. Click Create.
 
 ArgoCD will now automatically sync your manifests to the dev namespace.
