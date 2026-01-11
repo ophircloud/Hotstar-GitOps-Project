@@ -326,6 +326,7 @@ Project Name: default
 Sync Policy: Automatic
 
 Repository URL: https://github.com/ophircloud/Hotstar-GitOps-project.git
+
 Revision: HEAD
 
 Path: kubernetes-files
