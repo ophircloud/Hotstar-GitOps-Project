@@ -220,7 +220,7 @@ Apply
 Save
 6. **click Build**
 
-## To verify your EKS cluster, connect to your EC2 jumphost server and run:
+### To verify your EKS cluster, connect to your EC2 jumphost server and run:
 
 aws eks --region us-east-1 update-kubeconfig --name project-eks
 kubectl get nodes
@@ -228,7 +228,7 @@ kubectl get nodes
 
 
 🖥️ **Step 11: Install ArgoCD in Jumphost EC2**
-## 11.1: Create Namespace for ArgoCD
+### 11.1: Create Namespace for ArgoCD
 kubectl create namespace argocd
 
 ### 11.2: Install ArgoCD in the Created Namespace
@@ -252,7 +252,7 @@ kubectl get nodes
 
 kubectl get all -n argocd
 
-## Sample output:
+### Sample output:
 
 NAME                                                    READY   STATUS    RESTARTS   AGE
 pod/argocd-application-controller-0                     1/1     Running   0          106m
@@ -264,13 +264,13 @@ pod/argocd-repo-server-56998dcf9c-c75wk                 1/1     Running   0     
 pod/argocd-server-5985b6cf6f-zzgx8                      1/1     Running   0   
 
 
-## 11.6: Expose ArgoCD Server Using LoadBalancer
+### 11.6: Expose ArgoCD Server Using LoadBalancer
 
-## 11.6.1: Edit the ArgoCD Server Service
+### 11.6.1: Edit the ArgoCD Server Service
 
 kubectl edit svc argocd-server -n argocd
 
-## 11.6.2: Change the Service Type
+### 11.6.2: Change the Service Type
 
 Find this line:
 
@@ -289,23 +289,22 @@ kubectl get svc argocd-server -n argocd
 NAME            TYPE           CLUSTER-IP     EXTERNAL-IP                           PORT(S)                          AGE
 argocd-server   LoadBalancer   172.20.1.100   a1b2c3d4e5f6.elb.amazonaws.com  
 
-## 11.6.4: Access the ArgoCD UI
+### 11.6.4: Access the ArgoCD UI
 
-## Use the DNS:
-
+### Use the DNS:
 https://<EXTERNAL-IP>.amazonaws.com
 
-## 11.7: 🔐 Get the Initial ArgoCD Admin Password
+### 11.7: 🔐 Get the Initial ArgoCD Admin Password
 
 kubectl get secret argocd-initial-admin-secret -n argocd \
 
-## Login Details:
+### Login Details:
 Username: admin
 Password: (The output of the above command)
   -o jsonpath="{.data.password}" | base64 -d && echo
 
 
-## Step 12: Deploying with ArgoCD and Configuring Route 53
+### Step 12: Deploying with ArgoCD
 
 **Step 12.1: Create Namespace in EKS (from Jumphost EC2)**
 
@@ -314,7 +313,7 @@ Run these commands on your jumphost EC2 server:
 kubectl create namespace dev
 kubectl get namespaces
 
-## Step 12.2: Create New Applicatio with ArgoCD
+### Step 12.2: Create New Applicatio with ArgoCD
 
 Open the ArgoCD UI in your browser.
 Click + NEW APP.
@@ -331,7 +330,7 @@ Namespace: dev
 
 ArgoCD will now automatically sync your manifests to the dev namespace.
 
-## Step 12.3: Copy the Load Balancer URL
+### Step 12.3: Copy the Load Balancer URL
 
 Once the application is deployed:
 
