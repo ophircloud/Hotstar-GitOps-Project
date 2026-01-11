@@ -218,7 +218,123 @@ Branches to build : */master
 Script Path : jenkinsfiles/hotstar
 Apply
 Save
-6. click Build
+6. **click Build**
+
+## To verify your EKS cluster, connect to your EC2 jumphost server and run:
+
+aws eks --region us-east-1 update-kubeconfig --name project-eks
+kubectl get nodes
 
 
+
+🖥️ **Step 11: Install ArgoCD in Jumphost EC2**
+## 11.1: Create Namespace for ArgoCD
+kubectl create namespace argocd
+
+### 11.2: Install ArgoCD in the Created Namespace
+
+kubectl apply -n argocd \
+  -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+### 11.3: Verify the Installation
+
+Ensure all pods are in Running state.
+
+kubectl get pods -n argocd
+
+### 11.4: Validate the Cluster
+
+Check your nodes and create a test pod if necessary:
+
+kubectl get nodes
+
+### 11.5: List All ArgoCD Resources
+
+kubectl get all -n argocd
+
+## Sample output:
+
+NAME                                                    READY   STATUS    RESTARTS   AGE
+pod/argocd-application-controller-0                     1/1     Running   0          106m
+pod/argocd-applicationset-controller-787bfd9669-4mxq6   1/1     Running   0          106m
+pod/argocd-dex-server-bb76f899c-slg7k                   1/1     Running   0          106m
+pod/argocd-notifications-controller-5557f7bb5b-84cjr    1/1     Running   0          106m
+pod/argocd-redis-b5d6bf5f5-482qq                        1/1     Running   0          106m
+pod/argocd-repo-server-56998dcf9c-c75wk                 1/1     Running   0          106m
+pod/argocd-server-5985b6cf6f-zzgx8                      1/1     Running   0   
+
+
+## 11.6: Expose ArgoCD Server Using LoadBalancer
+
+## 11.6.1: Edit the ArgoCD Server Service
+
+kubectl edit svc argocd-server -n argocd
+
+## 11.6.2: Change the Service Type
+
+Find this line:
+
+type: ClusterIP
+Change it to:
+
+type: LoadBalancer
+Save and exit (:wq for vi).
+
+### 11.6.3: Get the External Load Balancer DNS
+
+kubectl get svc argocd-server -n argocd
+
+### Sample output:
+
+NAME            TYPE           CLUSTER-IP     EXTERNAL-IP                           PORT(S)                          AGE
+argocd-server   LoadBalancer   172.20.1.100   a1b2c3d4e5f6.elb.amazonaws.com  
+
+## 11.6.4: Access the ArgoCD UI
+
+## Use the DNS:
+
+https://<EXTERNAL-IP>.amazonaws.com
+
+## 11.7: 🔐 Get the Initial ArgoCD Admin Password
+
+kubectl get secret argocd-initial-admin-secret -n argocd \
+
+## Login Details:
+Username: admin
+Password: (The output of the above command)
+  -o jsonpath="{.data.password}" | base64 -d && echo
+
+
+## Step 12: Deploying with ArgoCD and Configuring Route 53
+
+**Step 12.1: Create Namespace in EKS (from Jumphost EC2)**
+
+Run these commands on your jumphost EC2 server:
+
+kubectl create namespace dev
+kubectl get namespaces
+
+## Step 12.2: Create New Applicatio with ArgoCD
+
+Open the ArgoCD UI in your browser.
+Click + NEW APP.
+Fill in the following:
+Application Name: project
+Project Name: default
+Sync Policy: Automatic
+Repository URL: https://github.com/ophircloud/Hotstar-GitOps-project.git
+Revision: HEAD
+Path: kubernetes-files
+Cluster URL: https://kubernetes.default.svc
+Namespace: dev
+4. Click Create.
+
+ArgoCD will now automatically sync your manifests to the dev namespace.
+
+## Step 12.3: Copy the Load Balancer URL
+
+Once the application is deployed:
+
+Go to the Services section in Kubernetes:
+kubectl get svc -n dev
 
