@@ -322,7 +322,9 @@ Click + NEW APP.
 Fill in the following:
 
 Application Name: project
+
 Project Name: default
+
 Sync Policy: Automatic
 
 Repository URL: https://github.com/ophircloud/Hotstar-GitOps-project.git
