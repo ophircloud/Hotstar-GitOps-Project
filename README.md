@@ -222,8 +222,7 @@ Save
 
 ### To verify your EKS cluster, connect to your EC2 jumphost server and run:
 
-aws eks --region us-east-1 update-kubeconfig --name project-eks
-kubectl get nodes
+aws ecr describe-repositories --region us-east-1
 
 
 
